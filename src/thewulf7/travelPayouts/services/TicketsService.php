@@ -67,25 +67,28 @@ class TicketsService extends AbstractService implements iService
      * @param int           $trip_class          Class of trip. Can be 0,1,2
      * @param int           $trip_duration       Trip duration in days
      *
+     * @param string        $beginning_of_period начало периода даты вылета
+     *
      * @return array Ticket[]
      * @throws \RuntimeException
      */
-    public function getLatestPrices($origin = '', $destination = '', $one_way = false, $currency = 'rub', $period_type = 'year', $page = 1, $limit = 30, $show_to_affiliates = true, $sorting = 'price', $trip_class = self::ECONOMY_CLASS, $trip_duration = 0)
+    public function getLatestPrices($origin = '', $destination = '', $one_way = false, $currency = 'rub', $period_type = 'year', $page = 1, $limit = 30, $show_to_affiliates = true, $sorting = 'price', $trip_class = self::ECONOMY_CLASS, $trip_duration = 0, $beginning_of_period = null)
     {
         $url = 'prices/latest';
 
         $options = [
-            'origin'             => strlen($origin) > 0 ? $origin : null,
-            'destination'        => strlen($destination) > 0 ? $destination : null,
-            'one_way'            => $one_way,
-            'currency'           => $currency,
-            'period_type'        => in_array($period_type, ['year', 'month', 'seasson', 'day'], true) ? $period_type : 'year',
-            'page'               => $page,
-            'limit'              => $limit,
-            'show_to_affiliates' => $show_to_affiliates,
-            'sorting'            => $sorting,
-            'trip_class'         => $trip_class,
-            'trip_duration'      => $trip_duration > 0 ? $trip_duration : null,
+            'origin'              => strlen($origin) > 0 ? $origin : null,
+            'destination'         => strlen($destination) > 0 ? $destination : null,
+            'one_way'             => $one_way,
+            'currency'            => $currency,
+            'period'              => in_array($period_type, ['year', 'month', 'seasson', 'day'], true) ? $period_type : 'year',
+            'page'                => $page,
+            'limit'               => $limit,
+            'show_to_affiliates'  => $show_to_affiliates,
+            'sorting'             => $sorting,
+            'trip_class'          => $trip_class,
+            'trip_duration'       => $trip_duration > 0 ? $trip_duration : null,
+            'beginning_of_period' => $beginning_of_period,
         ];
 
         $response = $this->getClient()->execute($url, $options);
